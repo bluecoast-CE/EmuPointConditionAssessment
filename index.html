@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet-svg-shape-markers.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/proj4.js"></script>
+        <script src="js/proj4leaflet.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/chainageLine_1.js"></script>
+        <script src="data/chainagePts_2.js"></script>
+        <script src="data/ConditonAssessmentTable_3.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+        }
+        var crs = new L.Proj.CRS('EPSG:32750', '+proj=utm +zone=50 +south +datum=WGS84 +units=m +no_defs', {
+            resolutions: [2800, 1400, 700, 350, 175, 84, 42, 21, 11.2, 5.6, 2.8, 1.4, 0.7, 0.35, 0.14, 0.07],
+        });
+        var map = L.map('map', {
+            crs: crs,
+            continuousWorld: false,
+            worldCopyJump: false,
+            zoomControl:true, maxZoom:28, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://www.bluecoastconsulting.com.au"><img src="images/logo-bluecoast.png" height="37px" width="150px"></a>');
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        var img_NearmapsMU3_0 = 'data/NearmapsMU3_0.png';
+        var img_bounds_NearmapsMU3_0 = [[-35.009882078371255,117.92180125819877],[-34.99484840486562,117.95278967514835]];
+        var layer_NearmapsMU3_0 = new L.imageOverlay(img_NearmapsMU3_0, img_bounds_NearmapsMU3_0);
+        bounds_group.addLayer(layer_NearmapsMU3_0);
+        map.addLayer(layer_NearmapsMU3_0);
+        function pop_chainageLine_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? Autolinker.link(feature.properties['id'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 600});
+        }
+
+        function style_chainageLine_1_0() {
+            return {
+                pane: 'pane_chainageLine_1',
+                opacity: 1,
+                color: 'rgba(183,72,75,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_chainageLine_1');
+        map.getPane('pane_chainageLine_1').style.zIndex = 401;
+        map.getPane('pane_chainageLine_1').style['mix-blend-mode'] = 'normal';
+        var layer_chainageLine_1 = new L.geoJson(json_chainageLine_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_chainageLine_1',
+            layerName: 'layer_chainageLine_1',
+            pane: 'pane_chainageLine_1',
+            onEachFeature: pop_chainageLine_1,
+            style: style_chainageLine_1_0,
+        });
+        bounds_group.addLayer(layer_chainageLine_1);
+        map.addLayer(layer_chainageLine_1);
+        function pop_chainagePts_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="4">' + (feature.properties['fid'] !== null ? Autolinker.link(feature.properties['fid'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="4">' + (feature.properties['cngmeters'] !== null ? Autolinker.link(feature.properties['cngmeters'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 600});
+        }
+
+        function style_chainagePts_2_0() {
+            return {
+                pane: 'pane_chainagePts_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(231,113,72,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_chainagePts_2');
+        map.getPane('pane_chainagePts_2').style.zIndex = 402;
+        map.getPane('pane_chainagePts_2').style['mix-blend-mode'] = 'normal';
+        var layer_chainagePts_2 = new L.geoJson(json_chainagePts_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_chainagePts_2',
+            layerName: 'layer_chainagePts_2',
+            pane: 'pane_chainagePts_2',
+            onEachFeature: pop_chainagePts_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_chainagePts_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_chainagePts_2);
+        map.addLayer(layer_chainagePts_2);
+        function pop_ConditonAssessmentTable_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' + (feature.properties['Name'] !== null ? Autolinker.link(feature.properties['Name'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Condition</th>\
+                        <td>' + (feature.properties['Condition'] !== null ? Autolinker.link(feature.properties['Condition'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Material</th>\
+                        <td>' + (feature.properties['Material'] !== null ? Autolinker.link(feature.properties['Material'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Type</th>\
+                        <td>' + (feature.properties['Type'] !== null ? Autolinker.link(feature.properties['Type'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Slope</th>\
+                        <td>' + (feature.properties['Slope'] !== null ? Autolinker.link(feature.properties['Slope'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CrestLevel</th>\
+                        <td>' + (feature.properties['CrestLevel'] !== null ? Autolinker.link(feature.properties['CrestLevel'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">YearBuilt</th>\
+                        <td>' + (feature.properties['YearBuilt'] !== null ? Autolinker.link(feature.properties['YearBuilt'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Owner</th>\
+                        <td>' + (feature.properties['Owner'] !== null ? Autolinker.link(feature.properties['Owner'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">StructID</th>\
+                        <td>' + (feature.properties['StructID'] !== null ? Autolinker.link(feature.properties['StructID'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">UnitSize</th>\
+                        <td>' + (feature.properties['UnitSize'] !== null ? Autolinker.link(feature.properties['UnitSize'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">X</th>\
+                        <td>' + (feature.properties['X'] !== null ? Autolinker.link(feature.properties['X'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Y</th>\
+                        <td>' + (feature.properties['Y'] !== null ? Autolinker.link(feature.properties['Y'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SiteInv</th>\
+                        <td>' + (feature.properties['SiteInv'] !== null ? Autolinker.link(feature.properties['SiteInv'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Underlayer</th>\
+                        <td>' + (feature.properties['Underlayer'] !== null ? Autolinker.link(feature.properties['Underlayer'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SlopeSteep</th>\
+                        <td>' + (feature.properties['SlopeSteep'] !== null ? Autolinker.link(feature.properties['SlopeSteep'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SlopeSlide</th>\
+                        <td>' + (feature.properties['SlopeSlide'] !== null ? Autolinker.link(feature.properties['SlopeSlide'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">InternalLo</th>\
+                        <td>' + (feature.properties['InternalLo'] !== null ? Autolinker.link(feature.properties['InternalLo'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ArmourDisp</th>\
+                        <td>' + (feature.properties['ArmourDisp'] !== null ? Autolinker.link(feature.properties['ArmourDisp'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ArmourSett</th>\
+                        <td>' + (feature.properties['ArmourSett'] !== null ? Autolinker.link(feature.properties['ArmourSett'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Bridging</th>\
+                        <td>' + (feature.properties['Bridging'] !== null ? Autolinker.link(feature.properties['Bridging'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Drifter</th>\
+                        <td>' + (feature.properties['Drifter'] !== null ? Autolinker.link(feature.properties['Drifter'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Safety</th>\
+                        <td>' + (feature.properties['Safety'] !== null ? Autolinker.link(feature.properties['Safety'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Functional</th>\
+                        <td>' + (feature.properties['Functional'] !== null ? Autolinker.link(feature.properties['Functional'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+ 					<tr>\
+                        <th scope="row">photo1</th>\
+                        <td>' + (feature.properties['photo1'] !== null ? '<img src="images/' + String(feature.properties['photo1']).replace(/[\\\/:]/g, '_').trim() + '" height="200px" width="400px" >' : '') + '</td>\
+                    </tr>\
+ 					<tr>\
+                        <th scope="row">photo2</th>\
+                        <td>' + (feature.properties['photo2'] !== null ? '<img src="images/' + String(feature.properties['photo2']).replace(/[\\\/:]/g, '_').trim() + '" height="200px" width="400px" >' : '') + '</td>\
+                    </tr>\
+ 					<tr>\
+                        <th scope="row">photo3</th>\
+                        <td>' + (feature.properties['photo3'] !== null ? '<img src="images/' + String(feature.properties['photo3']).replace(/[\\\/:]/g, '_').trim() + '" height="200px" width="400px" >' : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 600});
+        }
+
+        function style_ConditonAssessmentTable_3_0(feature) {
+            if (feature.properties['id'] >= 0.000000 && feature.properties['id'] <= 10.000000 ) {
+                return {
+                pane: 'pane_ConditonAssessmentTable_3',
+                opacity: 1,
+                color: 'rgba(215,25,28,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 6.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+            }
+            if (feature.properties['id'] >= 10.000000 && feature.properties['id'] <= 20.000000 ) {
+                return {
+                pane: 'pane_ConditonAssessmentTable_3',
+                opacity: 1,
+                color: 'rgba(253,128,11,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 6.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+            }
+            if (feature.properties['id'] >= 20.000000 && feature.properties['id'] <= 30.000000 ) {
+                return {
+                pane: 'pane_ConditonAssessmentTable_3',
+                opacity: 1,
+                color: 'rgba(255,255,76,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 6.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+            }
+            if (feature.properties['id'] >= 30.000000 && feature.properties['id'] <= 40.000000 ) {
+                return {
+                pane: 'pane_ConditonAssessmentTable_3',
+                opacity: 1,
+                color: 'rgba(13,38,221,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 6.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+            }
+            if (feature.properties['id'] >= 40.000000 && feature.properties['id'] <= 50.000000 ) {
+                return {
+                pane: 'pane_ConditonAssessmentTable_3',
+                opacity: 1,
+                color: 'rgba(43,247,34,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 6.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_ConditonAssessmentTable_3');
+        map.getPane('pane_ConditonAssessmentTable_3').style.zIndex = 403;
+        map.getPane('pane_ConditonAssessmentTable_3').style['mix-blend-mode'] = 'normal';
+        var layer_ConditonAssessmentTable_3 = new L.geoJson(json_ConditonAssessmentTable_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_ConditonAssessmentTable_3',
+            layerName: 'layer_ConditonAssessmentTable_3',
+            pane: 'pane_ConditonAssessmentTable_3',
+            onEachFeature: pop_ConditonAssessmentTable_3,
+            style: style_ConditonAssessmentTable_3_0,
+        });
+        bounds_group.addLayer(layer_ConditonAssessmentTable_3);
+        map.addLayer(layer_ConditonAssessmentTable_3);
+        setBounds();
+        var i = 0;
+        layer_chainagePts_2.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['cngmeters'] !== null?String('<div style="color: #000000; font-size: 8pt; font-family: \'MS Shell Dlg 2\', sans-serif;">' + layer.feature.properties['cngmeters']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_chainagePts_2'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_ConditonAssessmentTable_3.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Condition'] !== null?String('<div style="color: #000000; font-size: 16pt; font-weight: bold; font-family: \'MS Shell Dlg 2\', sans-serif;">' + layer.feature.properties['Condition']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_ConditonAssessmentTable_3'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        map.addControl(new L.Control.Search({
+            layer: layer_ConditonAssessmentTable_3,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'photo2'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        resetLabels([layer_chainagePts_2,layer_ConditonAssessmentTable_3]);
+        map.on("zoomend", function(){
+            resetLabels([layer_chainagePts_2,layer_ConditonAssessmentTable_3]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_chainagePts_2,layer_ConditonAssessmentTable_3]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_chainagePts_2,layer_ConditonAssessmentTable_3]);
+        });
+        </script>
+    </body>
+</html>
